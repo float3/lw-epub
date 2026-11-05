@@ -37,6 +37,16 @@ Options:
 | `-j, --jobs N` | Parallel downloads (default: 4). Keep it low; LessWrong rate-limits |
 | `--delay SECONDS` | Pause before each request, to be gentler on the server |
 | `-f, --force` | Rebuild books that already exist |
+| `-c, --combine TITLE` | Put all the given sequences into one book with this title, one section per sequence |
+| `-a, --author NAME` | Author shown on the book. Default: whoever wrote most of its posts, since sequences are often put together by a curator |
+
+For example, the 50 [Sequences Highlights](https://www.lesswrong.com/highlights) as one book:
+
+```sh
+lw-epub NBDFAKt3GbFwnwzQF gFvira6tHpLXnqCLH 6xgy8XYEisLk3tCjH \
+        pwK9RsvCdpPgKmrf6 paoDwasxFpSpzwA2f aaTrp2g86Qo3hinXQ \
+        --combine "Sequences Highlights" -j 2
+```
 
 Rate limits (HTTP 429) and server errors are retried with backoff, honouring `Retry-After`.
 Images that e-readers can't show (such as WebP) are converted to PNG when Pillow is installed.

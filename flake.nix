@@ -12,7 +12,7 @@
       packages = forAllSystems (pkgs: rec {
         lw-epub = pkgs.python3Packages.buildPythonApplication {
           pname = "lw-epub";
-          version = "0.1.0";
+          version = "0.2.0";
           pyproject = true;
           src = ./.;
           build-system = [ pkgs.python3Packages.setuptools ];
