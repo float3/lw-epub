@@ -1,11 +1,16 @@
 # lw-epub
 
-Build EPUB ebooks from [LessWrong](https://www.lesswrong.com) sequences, for reading offline on an
-e-reader.
+Build EPUB ebooks for reading offline on an e-reader from:
 
-It asks the LessWrong API for the sequence, its author and each post, downloads the images in
-parallel, and writes one EPUB per sequence with a cover, a nested table of contents, a byline and
-a source link on every chapter.
+- [LessWrong](https://www.lesswrong.com) sequences and posts, via the LessWrong API
+- Substack posts, via the Substack API, including publications on their own domain such as
+  [Astral Codex Ten](https://www.astralcodexten.com)
+- [Slate Star Codex](https://slatestarcodex.com) posts
+- [Joe Carlsmith](https://joecarlsmith.com) essays
+
+It downloads the images in parallel and writes one EPUB per sequence or post with a cover, a
+nested table of contents, a byline and a source link on every chapter. Footnote links jump within
+the book.
 
 This is a rewrite of [bartbussmann/lesswrong_ebook_library](https://github.com/bartbussmann/lesswrong_ebook_library)
 (MIT). That script started a headless Chrome for every post and scraped the page, which was slow
@@ -25,19 +30,22 @@ With pip:
 ```sh
 pip install "lw-epub[images] @ git+https://github.com/float3/lw-epub"
 lw-epub https://www.lesswrong.com/s/NBDFAKt3GbFwnwzQF -o books/
+lw-epub https://slatestarcodex.com/2014/12/12/beware-the-man-of-one-study/
+lw-epub https://www.astralcodexten.com/p/the-psychopolitics-of-trauma
+lw-epub https://joecarlsmith.com/2021/01/24/on-clinging
 ```
 
 Options:
 
 | Option | What it does |
 |---|---|
-| `SEQUENCE ...` | Sequence URLs (`https://www.lesswrong.com/s/<id>`) or bare ids |
+| `URL ...` | LessWrong sequence (`/s/<id>`, or a bare id) or post (`/posts/<id>`); Substack post (`/p/<slug>` on any Substack domain, or `open.substack.com/pub/<name>/p/<slug>`); slatestarcodex.com or joecarlsmith.com post |
 | `--from-html FILE` | Also build every sequence linked from a saved HTML page, e.g. the [Library](https://www.lesswrong.com/library). Repeatable |
 | `-o, --output DIR` | Where to write the books (default: current directory) |
 | `-j, --jobs N` | Parallel downloads (default: 4). Keep it low; LessWrong rate-limits |
 | `--delay SECONDS` | Pause before each request, to be gentler on the server |
 | `-f, --force` | Rebuild books that already exist |
-| `-c, --combine TITLE` | Put all the given sequences into one book with this title, one section per sequence |
+| `-c, --combine TITLE` | Put everything given into one book with this title, one section per sequence. Posts from any site can be mixed |
 | `-a, --author NAME` | Author shown on the book. Default: whoever wrote most of its posts, since sequences are often put together by a curator |
 
 For example, the 50 [Sequences Highlights](https://www.lesswrong.com/highlights) as one book:
@@ -47,6 +55,14 @@ lw-epub NBDFAKt3GbFwnwzQF gFvira6tHpLXnqCLH 6xgy8XYEisLk3tCjH \
         pwK9RsvCdpPgKmrf6 paoDwasxFpSpzwA2f aaTrp2g86Qo3hinXQ \
         --combine "Sequences Highlights" -j 2
 ```
+
+Or a reading list from several sites:
+
+```sh
+lw-epub https://slatestarcodex.com/2014/12/12/beware-the-man-of-one-study/         https://joecarlsmith.com/2021/01/24/on-clinging         --combine "Meetup reading"
+```
+
+Paid Substack posts only include the free preview; the tool warns when that happens.
 
 Rate limits (HTTP 429) and server errors are retried with backoff, honouring `Retry-After`.
 Images that e-readers can't show (such as WebP) are converted to PNG when Pillow is installed.
@@ -61,7 +77,7 @@ python lw_epub.py --help
 ## Content and copyright
 
 The tool is MIT-licensed; the posts it downloads are not yours or ours. Each post belongs to its
-author, under LessWrong's terms. Use the books for your own reading, and don't redistribute them
+author, under the terms of the site it came from. Use the books for your own reading, and don't redistribute them
 without the authors' permission. That's also why this repo, unlike the original, contains no
 generated books.
 

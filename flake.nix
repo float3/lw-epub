@@ -1,5 +1,5 @@
 {
-  description = "lw-epub: build EPUB ebooks from LessWrong sequences";
+  description = "lw-epub: build EPUB ebooks from LessWrong, Substack, SSC and joecarlsmith.com";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -12,7 +12,7 @@
       packages = forAllSystems (pkgs: rec {
         lw-epub = pkgs.python3Packages.buildPythonApplication {
           pname = "lw-epub";
-          version = "0.2.0";
+          version = "0.3.0";
           pyproject = true;
           src = ./.;
           build-system = [ pkgs.python3Packages.setuptools ];
@@ -25,7 +25,7 @@
           ];
           pythonImportsCheck = [ "lw_epub" ];
           meta = {
-            description = "Build EPUB ebooks from LessWrong sequences using the LessWrong API";
+            description = "Build EPUB ebooks from LessWrong, Substack, Slate Star Codex and joecarlsmith.com";
             license = pkgs.lib.licenses.mit;
             mainProgram = "lw-epub";
           };
